@@ -1,0 +1,30 @@
+- name: Автосинхронизация времени на linux серверах
+  hosts: myhosts
+#  connection: local
+  become: yes
+
+  tasks:
+  - name: Установка ntpdate
+    package:
+      name: ntpdate
+      state: present
+    when: ansible_facts['os_family'] == "Debian"
+
+#  - name: Остановка timesyncd
+ #   systemd:
+  #    name: systemd-timesyncd
+   #   state: stopped
+    #  enabled: no
+
+  - name: Установка часового пояса
+    timezone:
+      name: Asia/Yekaterinburg
+
+  - name: Синхронизация времени
+    command: ntpdate -s -b winsrv-1.lab1.lan
+
+#  - name: Запускаем timesyncd обратно
+#    systemd:
+#      name: systemd-timesyncd
+#      state: started
+#      enabled: yes
