@@ -1,0 +1,43 @@
+- hosts: myhosts
+  tasks:
+      - name: Загрузка репозитория zabbix
+        get_url:
+            url: "https://repo.zabbix.com/zabbix/7.4/stable/ubuntu/pool/main/z/zabbix/zabbix-agent_7.4.1-1%2Bubuntu24.04_amd64.deb"
+            dest: /tmp/zabbix.deb
+
+      - name: Распаковка репозитория zabbix
+        become: yes
+        apt:
+            deb: /tmp/zabbix.deb
+            state: present
+
+      - name: Установка zabbix агента
+        become: yes
+        apt:
+            name: zabbix-agent
+            state: present
+            update_cache: yes
+
+      - name: Остановка zabbix агента
+        become: yes
+        service:
+            name: zabbix-agent
+            state: stopped
+
+      - name: Удаление конфига zabbix агента
+        become: yes
+        file:
+            path: /etc/zabbix/zabbix_agentd.conf
+            state: absent
+
+      - name: Загрузка нового образа zabbix агента из шаблона
+        become: yes
+        template:
+            src: "/an_pr/playbooks/zabbix_agentd.conf.j2"
+            dest: "/etc/zabbix/zabbix_agentd.conf"
+
+      - name: Запуск сервиса zabbix агента
+        become: yes
+        service:
+            name: zabbix-agent
+            state: started
