@@ -1,0 +1,5 @@
+- name: Автозаполнение инвентаря
+  hosts: ansible
+  tasks:
+  - name: Запуск скрипта
+    shell: bash /an_pr/playbooks/autoinventory_new2.sh
