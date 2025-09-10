@@ -5,3 +5,8 @@
     shell: bash /an_pr/playbooks/autoinventory_new.sh
     args:
       executable: /bin/bash
+  - name: Show File Content
+    debug:
+      msg: "{{ lookup('file', '/an_pr/playbooks/autoinventory.yaml') }}"
+
+
